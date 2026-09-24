@@ -28,6 +28,9 @@ npm run dev    # 同时启动前后端
 | `npm run dev:frontend` | 只启动前端 |
 | `npm run dev:backend` | 只启动后端 |
 | `npm run build` | 构建前后端产物 |
+| `npm test` | 跑前后端全部测试 |
+| `npm run test:backend` | 只跑后端测试 |
+| `npm run test:frontend` | 只跑前端测试 |
 | `npm run lint` | 前端代码检查（oxlint） |
 
 ## 目录结构
@@ -38,11 +41,14 @@ my-app/
 │   ├── src/App.tsx      待办页面
 │   ├── src/api.ts       调用后端的封装
 │   ├── src/types.ts     与后端共享的数据类型
-│   └── vite.config.ts   含 /api 代理配置
+│   ├── src/App.test.tsx 组件测试
+│   └── vite.config.ts   含 /api 代理和 vitest 配置
 ├── backend/             Express + TS
-│   ├── src/index.ts     应用入口
+│   ├── src/index.ts     启动服务器
+│   ├── src/app.ts       组装路由（不 listen，方便测试）
 │   ├── src/db.ts        SQLite 连接与建表
 │   ├── src/todos.ts     待办接口
+│   ├── test/todos.test.ts  接口测试
 │   └── data/todos.db    数据库文件（gitignore，首次启动自动生成）
 └── package.json         workspaces + 启动脚本
 ```
@@ -67,3 +73,20 @@ my-app/
 - 换个位置：设环境变量 `DB_PATH=/your/path.db`
 - 跑纯内存（重启即清空，适合测试）：`DB_PATH=:memory:`
 - 清空数据重来：删掉 `backend/data/todos.db`，下次启动会自动重建目录和表
+
+## 测试
+
+用 [Vitest](https://vitest.dev/)，前后端各有一套。
+
+```bash
+npm test                # 前后端全部（26 个用例）
+npm run test:backend    # 只跑后端：supertest 直接打接口（18 个）
+npm run test:frontend   # 只跑前端：React Testing Library（8 个）
+```
+
+只看某个用例加 `-t 关键词`；边改边跑用 `npm run test:watch -w backend`（前端同理）。
+
+写测试时踩过的两个坑，留个记录：
+
+- **后端测试必须跑内存库**：`backend/vitest.config.ts` 里设了 `DB_PATH=:memory:`，`todos.test.ts` 里还有一条断言专门盯着这件事，防止哪天测试误写到真实数据上。
+- **前端测试要手动 `cleanup()`**：没开 vitest 的 `globals`，RTL 的自动清理就不会注册，`afterEach` 里得显式调用，否则上一个用例残留的 DOM 会让 `findByText` 匹配到多个元素而失败。

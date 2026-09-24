@@ -4,7 +4,8 @@ import { DatabaseSync } from 'node:sqlite'
 
 // 用 Node 24 内置的 node:sqlite，无需额外依赖。
 // DB_PATH=:memory: 可以跑纯内存模式（重启即清空，适合测试）。
-const dbPath =
+// 导出路径，方便日志和测试断言当前用的是哪个库
+export const dbPath =
   process.env.DB_PATH ?? join(import.meta.dirname, '..', 'data', 'todos.db')
 
 if (dbPath !== ':memory:') {

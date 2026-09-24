@@ -26,6 +26,9 @@ npm-debug.log*
 .vite/
 node_modules/.cache/
 
+# 测试覆盖率报告
+coverage/
+
 # 编辑器 / 系统
 .vscode/*
 !.vscode/extensions.json
