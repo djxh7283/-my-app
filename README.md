@@ -35,10 +35,13 @@ npm run dev    # 同时启动前后端
 ```
 my-app/
 ├── frontend/            Vite + React + TS
-│   ├── src/App.tsx      页面，调用后端 /api/hello
+│   ├── src/App.tsx      待办页面
+│   ├── src/api.ts       调用后端的封装
+│   ├── src/types.ts     与后端共享的数据类型
 │   └── vite.config.ts   含 /api 代理配置
 ├── backend/             Express + TS
-│   └── src/index.ts     接口实现
+│   ├── src/index.ts     应用入口
+│   └── src/todos.ts     待办接口 + 内存存储
 └── package.json         workspaces + 启动脚本
 ```
 
@@ -46,5 +49,15 @@ my-app/
 
 | 方法 | 路径 | 说明 |
 | --- | --- | --- |
+| GET | `/api/todos` | 列出全部待办 |
+| POST | `/api/todos` | 新建，body `{ "title": "..." }` |
+| PATCH | `/api/todos/:id` | 更新，body `{ "title"?: "...", "done"?: true }` |
+| DELETE | `/api/todos/:id` | 删除 |
 | GET | `/api/hello` | 返回欢迎信息和服务器当前时间 |
 | GET | `/api/health` | 健康检查 |
+
+## 数据存储
+
+待办数据存在**内存里**（`backend/src/todos.ts` 的一个 `Map`），所以**后端一重启就清空**。
+
+这样做是为了让示例保持零依赖、开箱即跑。要持久化的话，把 `todos.ts` 里那几个 `Map` 操作换成数据库读写即可，接口形状不用动。

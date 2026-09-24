@@ -1,13 +1,12 @@
 main {
-  max-width: 40rem;
-  margin: 4rem auto;
+  max-width: 34rem;
+  margin: 3.5rem auto;
   padding: 0 1.5rem;
-  text-align: center;
 }
 
 h1 {
-  font-size: 2rem;
-  margin-bottom: 0.25rem;
+  font-size: 1.9rem;
+  margin: 0 0 0.25rem;
 }
 
 .sub {
@@ -15,9 +14,26 @@ h1 {
   color: var(--muted);
 }
 
+form {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+form input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: inherit;
+}
+
 button {
   font: inherit;
-  padding: 0.6rem 1.2rem;
+  padding: 0.55rem 1rem;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface);
@@ -25,31 +41,64 @@ button {
   cursor: pointer;
 }
 
-button:hover:not(:disabled) {
+button:hover {
   background: var(--surface-hover);
 }
 
-button:disabled {
-  cursor: progress;
-  opacity: 0.6;
+.todos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.result {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  border-radius: 8px;
-  background: var(--surface);
-  text-align: left;
-  white-space: pre-wrap;
+.todos li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.25rem;
+  border-bottom: 1px solid var(--border);
 }
 
-.error {
-  margin-top: 1.5rem;
+.todos li label {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+}
+
+.todos li input[type='checkbox'] {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+.todos li.done span {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.todos .remove {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.875rem;
   color: #b91c1c;
 }
 
+.error {
+  margin: 0 0 1rem;
+  color: #b91c1c;
+}
+
+.empty {
+  padding: 2rem 0;
+  color: var(--muted);
+  text-align: center;
+}
+
 @media (prefers-color-scheme: dark) {
-  .error {
+  .error,
+  .todos .remove {
     color: #fca5a5;
   }
 }
