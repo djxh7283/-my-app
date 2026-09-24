@@ -1,5 +1,7 @@
 # my-app
 
+[![CI](https://github.com/djxh7283/-my-app/actions/workflows/ci.yml/badge.svg)](https://github.com/djxh7283/-my-app/actions/workflows/ci.yml)
+
 全栈示例项目：Vite + React + TypeScript 前端，Express + TypeScript 后端。
 
 ## 环境要求
@@ -90,3 +92,13 @@ npm run test:frontend   # 只跑前端：React Testing Library（8 个）
 
 - **后端测试必须跑内存库**：`backend/vitest.config.ts` 里设了 `DB_PATH=:memory:`，`todos.test.ts` 里还有一条断言专门盯着这件事，防止哪天测试误写到真实数据上。
 - **前端测试要手动 `cleanup()`**：没开 vitest 的 `globals`，RTL 的自动清理就不会注册，`afterEach` 里得显式调用，否则上一个用例残留的 DOM 会让 `findByText` 匹配到多个元素而失败。
+
+## 持续集成
+
+`.github/workflows/ci.yml` 在**每次 push 到 `main`** 和**每个 PR** 上跑，四步依次执行：
+
+```
+安装依赖（npm ci）→ 类型检查 → 代码检查 → 测试 → 构建
+```
+
+任何一步红了，PR 页面会直接标出来，不用等人肉跑一遍。本地想提前自查就跑 `npm run typecheck && npm run lint && npm test && npm run build`（或者干脆 `npm test` 加 `npm run build`）。
