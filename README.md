@@ -41,7 +41,9 @@ my-app/
 │   └── vite.config.ts   含 /api 代理配置
 ├── backend/             Express + TS
 │   ├── src/index.ts     应用入口
-│   └── src/todos.ts     待办接口 + 内存存储
+│   ├── src/db.ts        SQLite 连接与建表
+│   ├── src/todos.ts     待办接口
+│   └── data/todos.db    数据库文件（gitignore，首次启动自动生成）
 └── package.json         workspaces + 启动脚本
 ```
 
@@ -58,6 +60,10 @@ my-app/
 
 ## 数据存储
 
-待办数据存在**内存里**（`backend/src/todos.ts` 的一个 `Map`），所以**后端一重启就清空**。
+用 **SQLite** 持久化，数据库文件在 `backend/data/todos.db`（已在 `.gitignore` 里，不会提交）。
 
-这样做是为了让示例保持零依赖、开箱即跑。要持久化的话，把 `todos.ts` 里那几个 `Map` 操作换成数据库读写即可，接口形状不用动。
+用的是 Node 24 内置的 [`node:sqlite`](https://nodejs.org/api/sqlite.html)，**不需要任何额外依赖**，也不用编译原生模块。
+
+- 换个位置：设环境变量 `DB_PATH=/your/path.db`
+- 跑纯内存（重启即清空，适合测试）：`DB_PATH=:memory:`
+- 清空数据重来：删掉 `backend/data/todos.db`，下次启动会自动重建目录和表

@@ -6,6 +6,12 @@ dist/
 dist-ssr/
 build/
 
+# SQLite 数据库文件（本地数据，不提交）
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
 # 环境变量（不要把密钥提交上去）
 .env
 .env.local
